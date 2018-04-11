@@ -136,7 +136,9 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
         number.forEachIndexed { index, number ->
                 statement.bindLong(index + 3, number)
                 }
-        notifyQueries(queryWrapper.playerQueries.allPlayers + queryWrapper.playerQueries.playersForTeam + queryWrapper.playerQueries.playersForNumbers)
+        synchronized(queryWrapper.playerQueries.allPlayers) { notifyQueries(queryWrapper.playerQueries.allPlayers) }
+        synchronized(queryWrapper.playerQueries.playersForTeam) { notifyQueries(queryWrapper.playerQueries.playersForTeam) }
+        synchronized(queryWrapper.playerQueries.playersForNumbers) { notifyQueries(queryWrapper.playerQueries.playersForNumbers) }
         return statement.execute()
     }
 
@@ -168,7 +170,9 @@ class PlayerQueries(private val queryWrapper: QueryWrapper, private val database
             statement.bindString(3, team)
             statement.bindString(4, queryWrapper.playerAdapter.shootsAdapter.encode(shoots))
             val result = statement.execute()
-            notifyQueries(queryWrapper.playerQueries.allPlayers + queryWrapper.playerQueries.playersForTeam + queryWrapper.playerQueries.playersForNumbers)
+            synchronized(queryWrapper.playerQueries.allPlayers) { notifyQueries(queryWrapper.playerQueries.allPlayers) }
+            synchronized(queryWrapper.playerQueries.playersForTeam) { notifyQueries(queryWrapper.playerQueries.playersForTeam) }
+            synchronized(queryWrapper.playerQueries.playersForNumbers) { notifyQueries(queryWrapper.playerQueries.playersForNumbers) }
             return result
         }
     }

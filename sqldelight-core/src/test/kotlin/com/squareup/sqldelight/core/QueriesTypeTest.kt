@@ -87,7 +87,7 @@ class QueriesTypeTest {
       |            statement.bindLong(1, id)
       |            statement.bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
       |            val result = statement.execute()
-      |            notifyQueries(queryWrapper.dataQueries.selectForId)
+      |            synchronized(queryWrapper.dataQueries.selectForId) { notifyQueries(queryWrapper.dataQueries.selectForId) }
       |            return result
       |        }
       |    }

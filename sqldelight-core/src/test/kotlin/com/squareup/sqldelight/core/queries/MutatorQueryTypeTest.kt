@@ -61,7 +61,7 @@ class MutatorQueryTypeTest {
       |        statement.bindLong(1, if (id == null) null else id.toLong())
       |        statement.bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
       |        val result = statement.execute()
-      |        notifyQueries(queryWrapper.dataQueries.selectForId)
+      |        synchronized(queryWrapper.dataQueries.selectForId) { notifyQueries(queryWrapper.dataQueries.selectForId) }
       |        return result
       |    }
       |}
@@ -95,7 +95,7 @@ class MutatorQueryTypeTest {
       |        statement.bindLong(1, if (id == null) null else id.toLong())
       |        statement.bindString(2, if (value == null) null else queryWrapper.dataAdapter.valueAdapter.encode(value))
       |        val result = statement.execute()
-      |        notifyQueries(queryWrapper.otherDataQueries.selectForId)
+      |        synchronized(queryWrapper.otherDataQueries.selectForId) { notifyQueries(queryWrapper.otherDataQueries.selectForId) }
       |        return result
       |    }
       |}
@@ -199,7 +199,7 @@ class MutatorQueryTypeTest {
       |private inner class DeleteData(private val statement: com.squareup.sqldelight.db.SqlPreparedStatement) {
       |    fun execute(): kotlin.Long {
       |        val result = statement.execute()
-      |        notifyQueries(queryWrapper.dataQueries.selectForId)
+      |        synchronized(queryWrapper.dataQueries.selectForId) { notifyQueries(queryWrapper.dataQueries.selectForId) }
       |        return result
       |    }
       |}
@@ -323,7 +323,7 @@ class MutatorQueryTypeTest {
       |        statement.bindLong(3, if (deprecated) 1L else 0L)
       |        statement.bindString(4, link)
       |        val result = statement.execute()
-      |        notifyQueries(queryWrapper.dataQueries.queryTerm)
+      |        synchronized(queryWrapper.dataQueries.queryTerm) { notifyQueries(queryWrapper.dataQueries.queryTerm) }
       |        return result
       |    }
       |}
